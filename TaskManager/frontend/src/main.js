@@ -3,8 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import BoostrapVue from 'bootstrap-vue'
 
 Vue.config.productionTip = false
+Vue.use(BoostrapVue)
 
 /* eslint-disable no-new */
 new Vue({
