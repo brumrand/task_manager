@@ -9,9 +9,9 @@ class Task(models.Model):
         ('Otros', 'Otros'),
     ]
 
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
-    deadline = models.DateTimeField()
-    completed = models.BooleanField(default=False)
+    title = models.CharField(max_length=100, blank=False)
+    description = models.TextField(blank=False)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=False)
+    deadline = models.DateTimeField(blank=False, null=False)
+    completed = models.BooleanField(default=False, blank=False)
     
