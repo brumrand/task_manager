@@ -1,8 +1,11 @@
 <script setup>
 import BaseInput from "../BaseInput.vue";
 import BaseSelect from "../BaseSelect.vue";
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import axios from 'axios';
+import { useVuelidate } from '@vuelidate/core'
+import { required, email } from '@vuelidate/validators'
+
 const path = "http://localhost:8000/api/v1.0/tasks/";
 const optionsArray = [
   { value: 'Personal', text: 'Personal' },
@@ -11,32 +14,50 @@ const optionsArray = [
   { value: 'Otros', text: 'Otros' }
 ];
 
-const title = ref("");
-const description = ref("");
-const category = ref("");
-const deadline = ref("");
-const completed = ref("");
+const formData = reactive({
+  title:"",
+  description:"",
+  category:"",
+  deadline:"",
+  completed:"",
+});
+const rules = {
+  title:{required},
+  description:{required},
+  category:{required},
+  deadline:{required}
+};
+const v$ = useVuelidate(rules, formData);
 
 const handleSubmit = async (event) => {
+  console.log(formData);
   event.preventDefault(); // Evitar el envío automático del formulario
+  let validator = await v$.value.$validate();
+  let errrr = await v$.errors;
+if(validator){
 
+    try {
+      // Enviar los datos a través de Axios en una solicitud POST
+      const response = await axios.post(path, {
+    title: formData.title,
+    description: formData.description,
+    category: formData.category,
+    deadline: formData.deadline,
+    completed: formData.completed !== ""
+  });
   
-  try {
-    // Enviar los datos a través de Axios en una solicitud POST
-    const response = await axios.post(path, {
-      title,
-      description,
-      category,
-      deadline,
-      completed
-    });
- 
-    // Manejar la respuesta exitosa si es necesario
-    console.log('Solicitud POST exitosa:', response.data);
-  } catch (error) {
-    // Manejar el error si ocurre alguno
-    console.error('Error al enviar la solicitud POST:', error);
-  }
+      // Manejar la respuesta exitosa si es necesario
+      console.log('Solicitud POST exitosa:', response.data);
+    } catch (error) {
+      // Manejar el error si ocurre alguno
+      console.error('Error al enviar la solicitud POST:', error);
+    }
+}else{
+  console.log(errrr)
+  alert("Faltan campos requeridos")
+}
+  
+
 }
 </script>
 <template >
@@ -44,11 +65,11 @@ const handleSubmit = async (event) => {
     <h1>Create task form</h1>
     <form  @submit.prevent="handleSubmit" enctype="multipart/form-data" class="form-horizontal">
   <fieldset>
-    <BaseInput v-model="title"  type="text" label="Title" name="Title" addClass="form-control"/>
-    <BaseInput v-model="description"  type="text" label="Description" name="Description" addClass="form-control"/>
-    <BaseSelect v-model="category"  label="Options" name="Description" addClass="form-control" :options="optionsArray"/>
-    <BaseInput v-model="deadline"  type="datetime-local" label="Deadline" name="deadline"         addClass="form-control"/>
-    <BaseInput v-model="completed"  type="checkbox" label="Completed" name="completed"         />
+    <BaseInput v-model="formData.title"  type="text" label="Title" name="Title" addClass="form-control"/>
+    <BaseInput v-model="formData.description"  type="text" label="Description" name="Description" addClass="form-control"/>
+    <BaseSelect v-model="formData.category"  label="Options" name="Description" addClass="form-control" :options="optionsArray"/>
+    <BaseInput v-model="formData.deadline"  type="datetime-local" label="Deadline" name="deadline"         addClass="form-control"/>
+    <BaseInput v-model="formData.completed"  type="checkbox" label="Completed" name="completed" value="true"         />
 
     <div class="form-group row">
       <div class="col-sm-10 offset-sm-2">
