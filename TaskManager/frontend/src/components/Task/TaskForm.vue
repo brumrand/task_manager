@@ -13,6 +13,7 @@ const optionsArray = [
   { value: 'Estudio', text: 'Estudio' },
   { value: 'Otros', text: 'Otros' }
 ];
+let flag = true;
 
 const formData = reactive({
   title:"",
@@ -65,10 +66,10 @@ if(validator){
     <h1>Create task form</h1>
     <form  @submit.prevent="handleSubmit" enctype="multipart/form-data" class="form-horizontal">
   <fieldset>
-    <BaseInput v-model="formData.title"  type="text" label="Title" name="Title" addClass="form-control"/>
-    <BaseInput v-model="formData.description"  type="text" label="Description" name="Description" addClass="form-control"/>
-    <BaseSelect v-model="formData.category"  label="Options" name="Description" addClass="form-control" :options="optionsArray"/>
-    <BaseInput v-model="formData.deadline"  type="datetime-local" label="Deadline" name="deadline"         addClass="form-control"/>
+    <BaseInput v-model="formData.title"  type="text" label="Title" name="Title" :addClass="flag"/>
+    <BaseInput v-model="formData.description"  type="text" label="Description" name="Description" :addClass="flag"/>
+    <BaseSelect v-model="formData.category"  label="Options" name="Description" :addClass="flag" :options="optionsArray"/>
+    <BaseInput v-model="formData.deadline"  type="datetime-local" label="Deadline" name="deadline"         :addClass="flag"/>
     <BaseInput v-model="formData.completed"  type="checkbox" label="Completed" name="completed" value="true"         />
 
     <div class="form-group row">
