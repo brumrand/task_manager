@@ -1,67 +1,46 @@
-
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import { useStore } from 'vuex';
 
-const tasks = ref([]);
-const title = ref('');
-const path = ref('');
+const store = useStore(); // Importa el store Vuex
+const tasks = computed(() => store.state.data);
+const title = computed(() => store.state.title);
+const generalPath = 'http://localhost:8000/api/v1.0/tasks/';
 
-// Obtener la URI actual
-const currentUri = window.location.pathname;
-
-// Establecer el título y la ruta dependiendo de la URI actual
-if (currentUri === "/listLastSevenDays") {
-  title.value = "Tabla de Tareas últimos siete días";
-  path.value = "http://localhost:8000/api/v1.0/tasksLastSevenDays/";
-} else {
-  title.value = "Tabla de Tareas";
-  path.value = "http://localhost:8000/api/v1.0/tasks/";
-}
-
-
-// Define las funciones
-function getTaskData() {
-  axios.get(path.value)
-    .then((response) => {
-      console.log(response.data);
-      tasks.value = response.data;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
-
+onMounted(() => {
+  console.log(title)
+  store.dispatch('fetchData');
+});
+// Función para actualizar datos de tarea
 function updateTaskData(id) {
-  let object  = tasks.value.find(task => task.id === id);
-  if(object){
-    axios.patch(path.value+id+"/", { completed: !object.completed })
-    .then(response => {
-      getTaskData();
-    })
-    .catch(error => {
-      
-    });
+  let object = tasks.value.find(task => task.id === id);
+  if (object) {
+    axios.patch(generalPath + id + "/", { completed: !object.completed })
+      .then(response => {
+        store.dispatch('fetchData');
+      })
+      .catch(error => {
+        console.error('Error al actualizar datos de tarea:', error);
+      });
   }
 }
 
+// Función para eliminar datos de tarea
 function deleteTaskData(id) {
-  let object  = tasks.value.find(task => task.id === id);
-  if(object){
-    axios.delete(path.value+id+"/")
-    .then(response => {
-      getTaskData();
-    })
-    .catch(error => {
-      
-    });
+  let object = tasks.value.find(task => task.id === id);
+  if (object) {
+    axios.delete(generalPath + id + "/")
+      .then(response => {
+        store.dispatch('fetchData');
+      })
+      .catch(error => {
+        console.error('Error al eliminar datos de tarea:', error);
+      });
   }
 }
-
-
-// Llama a la función después de definirla
-getTaskData();
 </script>
+
 
 <template>
     <div class="container">
