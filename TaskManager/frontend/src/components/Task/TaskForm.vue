@@ -85,7 +85,7 @@ const handleSubmit = async (event) => {
           :options="optionsArray" />
         <BaseInput v-model="formData.deadline" type="datetime-local" label="Deadline" name="deadline"
           :addClass="flag" />
-        <BaseInput v-model="formData.completed" type="checkbox" label="Completed" name="completed" value="true" />
+
 
         <div class="form-group row">
           <div class="col-sm-10 offset-sm-2">
