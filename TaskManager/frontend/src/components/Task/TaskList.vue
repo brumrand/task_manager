@@ -43,7 +43,7 @@ function deleteTaskData(id) {
 
 
 <template>
-    <div class="container">
+  <div class="container">
     <h1>{{ title }}</h1>
     <table class="table">
       <thead>
@@ -74,6 +74,4 @@ function deleteTaskData(id) {
   </div>
 </template>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
+<style scoped></style>
