@@ -4,7 +4,7 @@ import { createStore } from 'vuex';
 
 const state ={
   data: null,
-  title: "pepito"
+  title: ""
 }
 const   mutations= {
   setData(state, data) {
@@ -29,6 +29,7 @@ const actions= {
       title = "Tabla de Tareas";
       path = "http://localhost:8000/api/v1.0/tasks/";
     }
+
     
     return axios.get(path)
       .then(response => {
